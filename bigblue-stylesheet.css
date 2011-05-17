@@ -1,0 +1,97 @@
+body {
+background: #ccddee;
+font: 71%/1.3 "Lucida Grande", Verdana, Tahoma, "Trebuchet Ms", Sans-Serif;
+text-align: center;
+}
+
+a {
+text-decoration: none;
+font-weight: bold;
+}
+a:link {
+color: #5783AF;
+}
+a:visited {
+color: #99A4AF;
+}
+a:hover, a:active {
+color: red;
+}
+
+img {
+border: 0;
+}
+
+p {
+margin: 0 0 13px;
+}
+
+input, textarea {
+border: 1px solid #99A4AF;
+padding: 3px 5px;
+font: inherit;
+width: 210px;
+vertical-align: middle;
+margin: 2px 0;
+}
+textarea {
+width: 300px;
+height: 120px;
+}
+input#submit {
+width: 80px;
+}
+
+#container {
+background: #fff;
+border: 1px solid #99A4AF;
+width: 600px;
+padding: 5px 25px;
+margin: 30px auto;
+text-align: left;
+}
+	#topnav, #footer, .pagination {
+	margin: 0 auto;
+	text-align: center;
+	width: 70%;
+	}
+	#topnav {
+	border-bottom: 1px solid #99A4AF;
+	margin-bottom: 10px;
+	padding: 5px 0 10px;
+	}
+	#footer {
+	border-top: 1px solid #99A4AF;
+	margin-top: 10px;
+	padding: 10px 0 5px;
+	}
+	
+	#entries {
+	width: 100%;
+	border-collapse: collapse;
+	margin: 10px auto;
+	}
+		#entries tr.rowcolor1 td {
+		background: #EFF7FF;
+		}
+		#entries td.meta {
+		width: 25%;
+		line-height: 1.5;
+		}
+		#entries td {
+		vertical-align: top;
+		padding: 10px;
+		}
+		#entries td img {
+		vertical-align: bottom;
+		}
+		
+span.bold {
+font-weight: bold;
+}
+.hidden {
+display: none;
+}
+.check {
+width: 14px;
+}
