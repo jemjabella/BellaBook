@@ -55,10 +55,10 @@ if (isset($_POST['submit']) || $_SERVER['REQUEST_METHOD'] == "POST") {
 			}
 	}
 	
-	#if (!preg_match($ipPattern, $_SERVER['REMOTE_ADDR']) || (isset($iplist) && preg_match($iplist, $_SERVER['REMOTE_ADDR']))) {
-	#	echo "<p>Your IP ({$_SERVER['REMOTE_ADDR']}) is not valid or it has been banned, you cannot sign the guestbook.</p>\n\n";
-	#	exit(include('footer.php'));
-	#}
+	if (!preg_match($ipPattern, $_SERVER['REMOTE_ADDR']) || (isset($iplist) && preg_match($iplist, $_SERVER['REMOTE_ADDR']))) {
+		echo "<p>Your IP ({$_SERVER['REMOTE_ADDR']}) is not valid or it has been banned, you cannot sign the guestbook.</p>\n\n";
+		exit(include('footer.php'));
+	}
 
 	// check to make sure it's not a known bot 
 	checkBots();
