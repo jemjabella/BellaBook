@@ -1,6 +1,6 @@
 <?php
 //-----------------------------------------------------------------------------
-// BellaBook Copyright © Jem Turner 2004-2007,2008 unless otherwise noted
+// BellaBook Copyright Â© Jem Turner 2004-2007,2008 unless otherwise noted
 // http://www.jemjabella.co.uk/
 //
 // This program is free software; you can redistribute it and/or modify
@@ -34,6 +34,6 @@ $captcha = "no";   // captcha on? - write yes or no
 $moderate = "no";   // new entries have to be approved first - write yes or no
 $floodcontrol = "no";   // allow flood control? - write yes or no
 $allowlinks = "no";   // allow urls in comment; choosing no cuts down on spam
-
+$maxPoints = 4; // max points a person can hit before it refuses to submit - recommend 4
 
 ?>

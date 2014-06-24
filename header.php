@@ -1,6 +1,6 @@
 <!--
 //-----------------------------------------------------------------------------
-// BellaBook Copyright © Jem Turner 2004-2007,2008 unless otherwise noted
+// BellaBook Copyright Â© Jem Turner 2004-2007,2008 unless otherwise noted
 // http://www.jemjabella.co.uk/
 //
 // This program is free software; you can redistribute it and/or modify
@@ -16,7 +16,7 @@
 <meta name="description" content="Basic guestbook script provided by BellaBook" />
 
 <link href="<?php echo $stylecolor; ?>-stylesheet.css" rel="stylesheet" type="text/css" />
-<title><?php echo $title; ?> - Powered by BellaBook</title>
+<title><?php echo $title; ?> <?php if (isset($_GET['page']) && is_numeric($_GET['page'])) echo '| Page '. (int)$_GET['page']; ?> - Powered by BellaBook</title>
 
 </head>
 <body>

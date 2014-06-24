@@ -1,6 +1,6 @@
 <?php
 //-----------------------------------------------------------------------------
-// BellaBook Copyright © Jem Turner 2004-2007,2008 unless otherwise noted
+// BellaBook Copyright Â© Jem Turner 2004-2007,2008 unless otherwise noted
 // http://www.jemjabella.co.uk/
 //
 // This program is free software; you can redistribute it and/or modify
@@ -76,6 +76,7 @@ function blanklinefix($inputfile) {
 	
 		$fl = fopen($inputfile, "w+");
 		if (flock($fl, LOCK_EX)) {
+			stream_set_write_buffer($fl, 0);
 			fwrite($fl, $newContent);
 			flock($fl, LOCK_UN);
 		} else {
@@ -89,6 +90,7 @@ function blanklinefix($inputfile) {
 function doWrite($file2open, $data, $writetype) {
 	$file = fopen($file2open, $writetype) or die("ERROR: could not open ".$file2open);
 	if (flock($file, LOCK_EX)) {
+		stream_set_write_buffer($file, 0);
 		fwrite($file, $data);
 		flock($file, LOCK_UN);
 	} else {

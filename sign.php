@@ -1,6 +1,6 @@
 <?php
 //-----------------------------------------------------------------------------
-// BellaBook Copyright © Jem Turner 2004-2007,2008 unless otherwise noted
+// BellaBook Copyright Â© Jem Turner 2004-2007,2008 unless otherwise noted
 // http://www.jemjabella.co.uk/
 //
 // This program is free software; you can redistribute it and/or modify
@@ -54,11 +54,11 @@ if (isset($_POST['submit']) || $_SERVER['REQUEST_METHOD'] == "POST") {
 				exit(include('footer.php'));
 			}
 	}
-		
-	if (!preg_match($ipPattern, $_SERVER['REMOTE_ADDR']) || (isset($iplist) && preg_match($iplist, $_SERVER['REMOTE_ADDR']))) {
-		echo "<p>Your IP is not valid or it has been banned, you cannot sign the guestbook.</p>\n\n";
-		exit(include('footer.php'));
-	}
+	
+	#if (!preg_match($ipPattern, $_SERVER['REMOTE_ADDR']) || (isset($iplist) && preg_match($iplist, $_SERVER['REMOTE_ADDR']))) {
+	#	echo "<p>Your IP ({$_SERVER['REMOTE_ADDR']}) is not valid or it has been banned, you cannot sign the guestbook.</p>\n\n";
+	#	exit(include('footer.php'));
+	#}
 
 	// check to make sure it's not a known bot 
 	checkBots();
@@ -76,43 +76,61 @@ if (isset($_POST['submit']) || $_SERVER['REQUEST_METHOD'] == "POST") {
 		// loop through and trim, otherwise the spam filter doesn't work
 		foreach($spamlist as $key => $spamword)
 			$spamlist[$key] = trim($spamword);
-
-		$SpamWords = '/(' . implode('|', $spamlist) . ')/i';
-	}
-
-	// check for javascript exploits/spam and clean up the data 
-	$exploits = "/(content-type|bcc:|cc:|document.cookie|onclick|onload|javascript|alert)/i";
-	foreach ($_POST as $key => $val) {
-		if (isset($SpamWords) && preg_match($SpamWords, urldecode($val))) {
-			echo "<p>Your message contains words in the spam list, please go back and remove references to obvious 'spam' material. \n</p>";
-			exit(include('footer.php'));
-		}
-		if (preg_match($exploits, $val)) {
-			echo "<p>No meta injection, please. \n</p>";
-			exit(include('footer.php'));
-		}
-		
-		$c[$key] = cleanUp($val);
-	}
-
-	// do some final checks 
-	$error_msg = NULL;
-	if (!empty($c['human'])) {
-		$error_msg .= "Spam detection tells me you're not human.";	
-	} elseif (empty($c['name']) || !ereg("^[A-Za-z' -]*$", $c['name']) || strlen($c['name']) > 12) {
-		$error_msg .= "Name is a invalid: must not be blank, must have no special characters, must not exceed 12 characters.";
-	} elseif ($emailrequired == "yes" && empty($c['email'])) {
-		$error_msg .= "E-mail is a required field, please fill it in.";
-	} elseif (!empty($c['email']) && !ereg("^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,6})$", strtolower($c['email']))) {
-		$error_msg .= "The e-mail address that you provided is not valid.";
-	} elseif ((!empty($c['url']) && $c['url'] != "http://") && !preg_match('/^(http|https|ftp):\/\/(([A-Z0-9][A-Z0-9_-]*)(\.[A-Z0-9][A-Z0-9_-]*)+)(:(\d+))?\/?/i', $c['url'])) {
-		$error_msg .= "The website address that you provided is not valid.";
-	} elseif (empty($c['comments']) || strlen($c['comments']) < 10) {
-		$error_msg .= "Your comment is too short.";
 	}
 	
-	if ($error_msg == NULL) {
+	# begin point based spam checks
+	$points = (int)0;
+	
+	if ( isset($spamlist) )
+		foreach ($spamlist as $word)
+			if (
+				strpos(strtolower($_POST['comments']), $word) !== false ||
+				strpos(strtolower($_POST['name']), $word) !== false
+			)
+				$points += 2;
+	
+
+	// check for javascript exploits/spam and clean up the data 
+	$exploits = array( 'content-type', 'bcc:', 'cc:', 'document.cookie', 'onclick', 'onload', 'javascript', 'alert' );
+	foreach ($exploits as $exploit)
+		if (
+			strpos(strtolower($_POST['email']), $exploit) !== false ||
+			strpos(strtolower($_POST['comments']), $exploit) !== false ||
+			strpos(strtolower($_POST['name']), $exploit) !== false
+		)
+			$points += 2;
+	
+	
+	if (strpos($_POST['comments'], "http://") !== false || strpos($_POST['comments'], "www.") !== false) # even if links are enabled we don't want too many
+		$points += 2;
+	if (isset($_POST['human']))
+		$points += 2;
+	if (preg_match("/(<.*>)/i", $_POST['comments'])) # html in a comment is a good indicator of spam
+		$points += 2;
+	if (strlen($_POST['name']) < 3 || strlen($_POST['name']) > 12)
+		$points += 1;
+	if (strlen($_POST['comments']) < 15 || strlen($_POST['comments'] > 1500))
+		$points += 2;
+	if (preg_match("/[bcdfghjklmnpqrstvwxyz]{7,}/i", $_POST['comments'])) # comments containing 7 or more consonants in a row is normally gibberish spam
+		$points += 1;
+	// end score assignments
+
+	// do some final checks 
+	if (empty($_POST['name']) || !preg_match("/^[a-zA-Z-'\s]*$/", stripslashes($_POST['name'])))
+		$error_msg .= "The name field must not be blank, must not contain special characters.\r\n";
+	if (!empty($_POST['email']) && !preg_match('/^([a-z0-9])(([-a-z0-9._])*([a-z0-9]))*\@([a-z0-9])(([a-z0-9-])*([a-z0-9]))+' . '(\.([a-z0-9])([-a-z0-9_-])?([a-z0-9])+)+$/i', strtolower($_POST['email'])))
+		$error_msg .= "That is not a valid e-mail address.\r\n";
+	if (!empty($_POST['url']) && $_POST['url'] != 'http://' && !preg_match('/^(http|https):\/\/(([A-Z0-9][A-Z0-9_-]*)(\.[A-Z0-9][A-Z0-9_-]*)+)(:(\d+))?\/?/i', $_POST['url']))
+		$error_msg .= "Invalid website url.\r\n";
+	if (empty($_POST['comments']) || strlen($_POST['comments']) < 10)
+		$error_msg .= "Your comment is too short.";
+	
+	if ($error_msg == NULL && $points <= $maxPoints) {
 		$show_form = false;
+		
+		# assign clean data to new array
+		foreach($_POST as $key => $value)
+			$c[$key] = $value;
 
 		// let's make the data look nice and pretty
 		$c['name'] = ucwords(strtolower($c['name']));

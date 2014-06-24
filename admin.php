@@ -1,6 +1,6 @@
 <?php
 //-----------------------------------------------------------------------------
-// BellaBook Copyright © Jem Turner 2004-2007,2008 unless otherwise noted
+// BellaBook Copyright Â© Jem Turner 2004-2007,2008 unless otherwise noted
 // http://www.jemjabella.co.uk/
 //
 // This program is free software; you can redistribute it and/or modify
@@ -8,7 +8,7 @@
 // or LICENSE.txt for more information.
 //-----------------------------------------------------------------------------
 
-@require('config.php');
+require_once('config.php');
 
 if (isset($_COOKIE['bellabook'])) {
 	if ($_COOKIE['bellabook'] == md5($admin_pass.$secret)) {
@@ -36,7 +36,7 @@ if (isset($_COOKIE['bellabook'])) {
 					if (isset($_GET['page']) && $x == $_GET['page'] || (!isset($_GET['page']) &&  $x == 1))
 						echo '<strong>'.$x.'</strong>';
 					else
-						echo '<a href="admin.php?p=manageentries&amp;file='.$file.'&amp;page='.$x.'">'.$x.'</a> ';
+						echo '<a href="admin.php?p=manageentries&amp;file='. $_GET['file'] .'&amp;page='.$x.'">'.$x.'</a> ';
 				}
 				echo  "</p> \n\n ";
 	
